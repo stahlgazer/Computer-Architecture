@@ -1,6 +1,6 @@
 """CPU functionality."""
-
 import sys
+SP = 5
 
 class CPU:
     """Main CPU class."""
@@ -15,7 +15,26 @@ class CPU:
             0b10000010: self.LDI,
             0b01000111: self.PRN,
             0b10100010: self.MUL,
+            0b01000101: self.PUSH,
+            0b01000110: self.POP,
         }
+    
+    def push_value(self, value):
+        self.reg[SP] -= 1
+        self.ram_write(value, self.reg[SP])
+
+    def pop_value(self):
+        value = self.ram_read(self.reg[SP])
+        self.reg[SP] += 1
+        return value      
+
+    def PUSH(self, operand_a, operand_b):
+        self.push_value(self.reg[operand_a])     
+        self.pc += 2
+
+    def POP(self, operand_a, operand_b):
+        self.reg[operand_a] = self.pop_value()                                       
+        self.pc +=2     
 
     def ram_read(self, mar):
         # mar is the address being read
@@ -44,6 +63,7 @@ class CPU:
         # for instruction in program:
         #     self.ram[address] = instruction
         #     address += 1
+
         with open(program) as lines:
             for line in lines:
                 line = line.split('#')
