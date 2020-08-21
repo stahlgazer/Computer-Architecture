@@ -3,7 +3,8 @@
 """Main."""
 
 import sys
-from cpu import *
+# from cpu import *
+from sprintcpu import *
 
 cpu = CPU()
 
